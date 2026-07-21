@@ -17,6 +17,8 @@ class Contact(models.Model):
     email = models.EmailField(max_length=254)
     create_date = models.DateTimeField(default=timezone.now)
     descripton = models.TextField(blank=True)
+    show = models.BooleanField(default=True) #se eu quero ou não exibir um contato
+    picture = models.ImageField(blank=True, upload_to='pictures/%Y/%m/')
 
 def __str__(self) -> str:
     return f'{self.first_name} {self.last_name}'

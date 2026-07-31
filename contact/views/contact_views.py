@@ -1,12 +1,43 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404
 from contact.models import Contact
+from django.db.models import Q
 
 def index(request):
     contacts = Contact.objects.filter(show=True)[0:10]
 
     context = {
         'contacts': contacts,
+        'title': 'Contatos - '
+
+    }
+
+    return render (
+        request,
+        'contact/index.html',
+        context
+    )
+
+def search(request):
+    search_value = request.GET.get('q', '').strip()
+
+    if search_value == '':
+       return redirect('contact:index')
+
+    contacts = Contact.objects.filter(
+        Q(first_name__icontains=search_value) |
+        Q(last_name__icontains=search_value) |
+        Q(phone__icontains=search_value) |
+        Q(email__icontains=search_value) 
+    )\
+    .filter(show=True)[0:10]
+
+    print(contacts.query)
+
+    context = {
+        'contacts': contacts,
+        'title': 'Search - '
+
     }
 
     return render (
@@ -21,8 +52,11 @@ def contact(request, contact_id):
     if single_contact is None:
         raise Http404()
 
+    title = f'{single_contact.first_name} {single_contact.last_name} - '
+
     context = {
         'contact': single_contact,
+        'title': title
     }
 
     return render (

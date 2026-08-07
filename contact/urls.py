@@ -5,6 +5,6 @@ app_name = 'contact'
 
 urlpatterns = [
     path('<int:contact_id>/', views.contact, name='contact'), #sempre colocar uma / no final da url
-    path('<search/', views.search, name='search'), #sempre colocar uma / no final da url
+    path('<search/', views.search, name='search'), 
     path('', views.index, name='index'),
 ]
